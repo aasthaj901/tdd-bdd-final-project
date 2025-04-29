@@ -166,6 +166,30 @@ class TestProductRoutes(TestCase):
     #
     # ADD YOUR TEST CASES HERE
     #
+    def test_get_product(self):
+        """Test case to retrieve a product by ID."""
+        # Create products using _create_products() method
+        test_product = self._create_products()[0]  # Assuming _create_products() creates and returns a list of products
+
+        # Construct the URL for the product
+        url = f"/products/{test_product.id}"
+    
+        # Send a GET request to the API endpoint
+        response = self.client.get(url)
+
+        # Assert that the return code is HTTP 200 OK
+        self.assertEqual(response.status_code, 200)
+
+        # Assert that the returned JSON matches the expected product data
+        self.assertEqual(response.json, test_product.serialize())  # Assuming the serialize method exists on the Product model
+    
+    def test_get_product_not_found(self):
+        """Test case to ensure a 404 is returned for a non-existent product."""
+        # Send a GET request with a non-existent product ID
+        response = self.client.get("/products/0")  # Assuming 0 is an invalid ID
+
+        # Assert that the return code is HTTP 404 NOT FOUND
+        self.assertEqual(response.status_code, 404)
 
     ######################################################################
     # Utility functions
